@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xlmns:th="http://www.thymeleaf.org" lang="en" xmlns:xlmns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Posts</title>
+</head>
+<body>
+    <div th:each="post : ${posts}">
+        <code>
+            <h2 th:text="${post.name}">Post name</h2>
+            <p th:text="${post.post}">Post text</p>
+            <a th:text="${post.created}"></a>
+        </code>
+    </div>
+</body>
+</html>
