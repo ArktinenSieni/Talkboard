@@ -1,9 +1,10 @@
-package talkboard.Domain;
+package talkboard.domain;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.Date;
 /**
  * Created by mcsieni on 15.1.2016.
  */
+@Entity
 public class Post extends AbstractPersistable<Long> {
 
     @NotNull
@@ -45,7 +47,7 @@ public class Post extends AbstractPersistable<Long> {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated() {
         this.created = new Date();
     }
 }

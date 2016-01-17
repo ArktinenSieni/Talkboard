@@ -1,7 +1,7 @@
-package talkboard.Repository;
+package talkboard.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import talkboard.Domain.Post;
+import talkboard.domain.Post;
 
 /**
  * Created by mcsieni on 15.1.2016.

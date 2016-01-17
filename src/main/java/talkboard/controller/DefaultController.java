@@ -1,9 +1,8 @@
-package talkboard.Controller;
+package talkboard.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created by mcsieni on 15.1.2016.

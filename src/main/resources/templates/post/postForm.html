@@ -1,12 +1,25 @@
 <!DOCTYPE html>
-<html xlmns:th="http://www.thymeleaf.org" lang="en" xmlns:xlmns="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8"/>
     <title>New Post</title>
 </head>
 <body>
-    <form>
+<form method="POST" th:action="@{/posts}">
+    <table>
+        <tr>
+            <td><b>Post name: </b></td>
+            <td><input type="text" name="name"/></td>
+        </tr>
+        <tr>
+            <td><b>Your post: </b></td>
+            <td><input type="text" name="text"/></td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Submit post"/></td>
+        </tr>
+    </table>
+</form>
 
-    </form>
 </body>
 </html>

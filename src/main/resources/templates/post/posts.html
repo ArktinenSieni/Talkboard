@@ -1,16 +1,22 @@
 <!DOCTYPE html>
-<html xlmns:th="http://www.thymeleaf.org" lang="en" xmlns:xlmns="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8"/>
     <title>Posts</title>
 </head>
 <body>
-    <div th:each="post : ${posts}">
-        <code>
-            <h2 th:text="${post.name}">Post name</h2>
-            <p th:text="${post.post}">Post text</p>
-            <a th:text="${post.created}"></a>
-        </code>
-    </div>
+<form method="GET" th:action="@{/posts/createPost}">
+    <input type="submit" value="Create new post"></input>
+</form>
+
+
+<div th:each="post : ${posts}">
+    <code>
+        <h2 th:text="${post.name}">Post name</h2>
+
+        <p th:text="${post.text}">Post text</p>
+        <a th:text="${post.created}">Post creation time</a>
+    </code>
+</div>
 </body>
 </html>
