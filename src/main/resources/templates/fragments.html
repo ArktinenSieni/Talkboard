@@ -7,7 +7,7 @@
 <body>
 
 <div th:fragment="errors">
-    <div th:if="${errors}" th:each="error : ${errors}">
+    <div class="alert alert-danger" th:if="${errors}" th:each="error : ${errors}">
         <ul>
             <li th:text="${error}"></li>
         </ul>
@@ -23,7 +23,10 @@
         </tr>
         <tr>
             <td><b>Your post: </b></td>
-            <td><input type="text" name="text" th:value="${post?.text}"/></td>
+            <td>
+                <textarea name="text" rows="5" cols="30" th:value="${post?.text}"></textarea>
+                <!--<input type="text" name="text" th:value="${post?.text}"/> -->
+            </td>
         </tr>
         <tr>
             <td><input type="submit" value="Submit post"/></td>
@@ -32,12 +35,27 @@
     </table>
 </div>
 
-<div th:fragment="confirm">
-    <script>
-        if (confirm("Are you sure?")) {
+<div th:fragment="navBar">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" th:href="@{/}">TALKBOARD</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{/posts}">Posts</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
 
-        }
-    </script>
+<div th:fragment="bootstrap">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </div>
 
 </body>

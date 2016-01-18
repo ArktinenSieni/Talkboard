@@ -5,36 +5,43 @@
     <title>Posts</title>
 </head>
 <body>
+<div th:include="fragments :: navBar"></div>
+<div th:include="fragments :: errors"></div>
+
 <form method="GET" th:action="@{/posts/createPost}">
-    <input type="submit" value="Create new post"/>
+    <input class="btn btn-default" type="submit" value="Create new post"/>
 </form>
 
+<div class="container-fluid" th:each="post : ${posts}">
+    <table class="table">
 
-<div th:each="post : ${posts}">
-    <table>
+        <thead>
+        <tr>
+            <th th:text="${post.name}"></th>
+        </tr>
+        </thead>
         <tbody>
         <tr>
-            <b th:text="${post.name}"></b>
-        </tr>
-        <tr>
-            <p th:text="${post.text}">Post text</p>
+            <td><p th:text="${post.text}">Post text</p></td>
         </tr>
         <tr>
             <td>
                 <form method="GET" th:action="@{/posts/{id} (id = ${post.id})}">
-                <input type="submit" value="Edit post"/>
+                <input class="btn btn-xs btn-primary" type="submit" value="Edit post"/>
                 </form>
             </td>
             <td>
                 <form method="POST" th:action="@{/posts/{id}/delete (id = ${post.id})}">
-                    <input onclick="confirm('Are you sure?')" type="submit" value="Delete post"/>
+                    <input class="btn btn-xs btn-danger" onclick="confirm('Are you sure?')" type="submit" value="Delete post"/>
                 </form>
             </td>
-            <td><a th:if="${post.modified}" th:text="'Modified: ' + ${post.modified} + ' | '">Post edition time</a></td>
+            <td><a th:if="${post.modified}" th:text="'Modified: ' + ${post.modified}">Post edition time</a></td>
             <td><a th:text="'Created: ' + ${post.created}">Post creation time</a></td>
         </tr>
         </tbody>
     </table>
 </div>
+
+<div th:include="fragments :: bootstrap"></div>
 </body>
 </html>
