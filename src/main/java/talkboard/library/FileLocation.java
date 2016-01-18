@@ -6,6 +6,7 @@ package talkboard.library;
 public enum FileLocation {
 
     POSTFORM ("post/postForm"),
+    POSTEDITFORM ("post/postEditForm"),
     POSTS ("post/posts");
 
 

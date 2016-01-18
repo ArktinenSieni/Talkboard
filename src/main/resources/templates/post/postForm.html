@@ -5,20 +5,11 @@
     <title>New Post</title>
 </head>
 <body>
+
+<div th:include="fragments :: errors"></div>
+
 <form method="POST" th:action="@{/posts}">
-    <table>
-        <tr>
-            <td><b>Post name: </b></td>
-            <td><input type="text" name="name"/></td>
-        </tr>
-        <tr>
-            <td><b>Your post: </b></td>
-            <td><input type="text" name="text"/></td>
-        </tr>
-        <tr>
-            <td><input type="submit" value="Submit post"/></td>
-        </tr>
-    </table>
+    <div th:include="fragments :: postEdit (${newPost})"></div>
 </form>
 
 </body>

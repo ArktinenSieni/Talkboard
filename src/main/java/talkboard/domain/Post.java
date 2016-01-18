@@ -27,6 +27,8 @@ public class Post extends AbstractPersistable<Long> {
 
     private Date created;
 
+    private Date modified;
+
     public String getName() {
         return name;
     }
@@ -49,5 +51,13 @@ public class Post extends AbstractPersistable<Long> {
 
     public void setCreated() {
         this.created = new Date();
+    }
+
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified() {
+        this.modified = new Date();
     }
 }

@@ -1,22 +1,40 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
 <head>
     <meta charset="UTF-8"/>
     <title>Posts</title>
 </head>
 <body>
 <form method="GET" th:action="@{/posts/createPost}">
-    <input type="submit" value="Create new post"></input>
+    <input type="submit" value="Create new post"/>
 </form>
 
 
 <div th:each="post : ${posts}">
-    <code>
-        <h2 th:text="${post.name}">Post name</h2>
-
-        <p th:text="${post.text}">Post text</p>
-        <a th:text="${post.created}">Post creation time</a>
-    </code>
+    <table>
+        <tbody>
+        <tr>
+            <b th:text="${post.name}"></b>
+        </tr>
+        <tr>
+            <p th:text="${post.text}">Post text</p>
+        </tr>
+        <tr>
+            <td>
+                <form method="GET" th:action="@{/posts/{id} (id = ${post.id})}">
+                <input type="submit" value="Edit post"/>
+                </form>
+            </td>
+            <td>
+                <form method="POST" th:action="@{/posts/{id}/delete (id = ${post.id})}">
+                    <input onclick="confirm('Are you sure?')" type="submit" value="Delete post"/>
+                </form>
+            </td>
+            <td><a th:if="${post.modified}" th:text="'Modified: ' + ${post.modified} + ' | '">Post edition time</a></td>
+            <td><a th:text="'Created: ' + ${post.created}">Post creation time</a></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

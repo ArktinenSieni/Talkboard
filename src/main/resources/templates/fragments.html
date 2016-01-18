@@ -2,11 +2,43 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title>Index</title>
+    <title>Frgments</title>
 </head>
 <body>
 
-    <h1>HAI</h1>
+<div th:fragment="errors">
+    <div th:if="${errors}" th:each="error : ${errors}">
+        <ul>
+            <li th:text="${error}"></li>
+        </ul>
+    </div>
+</div>
+
+<div th:fragment="postEdit(post)">
+    <table>
+        <tbody>
+        <tr>
+            <td><b>Post name: </b></td>
+            <td><input type="text" name="name" th:value="${post?.name}"/></td>
+        </tr>
+        <tr>
+            <td><b>Your post: </b></td>
+            <td><input type="text" name="text" th:value="${post?.text}"/></td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Submit post"/></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:fragment="confirm">
+    <script>
+        if (confirm("Are you sure?")) {
+
+        }
+    </script>
+</div>
 
 </body>
 </html>
