@@ -9,7 +9,9 @@ public enum Link {
     POSTS ("/posts"),
     REDIRECT_POSTS ("redirect:" + Link.POSTS),
     REDIRECT_POSTFORM ("redirect:" + Link.POSTS + "/createPost"),
-    REDIRECT_POSTEDIT ("redirect:" + Link.POSTS + "/{id}");
+    REDIRECT_POSTEDIT ("redirect:" + Link.POSTS + "/{id}"),
+    REDIRECT_THREADS ("redirect:/thread"),
+    REDIRECT_NEWTHREAD ("redirect:/thread/new");
 
     private final String link;
 

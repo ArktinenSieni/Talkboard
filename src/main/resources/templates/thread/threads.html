@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Posts</title>
+</head>
+<body>
+<div th:include="fragments :: navBar"></div>
+<div th:include="fragments :: errors"></div>
+
+<form method="get" th:action="@{/thread/new}">
+    <input type="submit" class="btn btn-default" value="Create thread"/>
+</form>
+
+<div class="container-fluid">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td><b>Thread header</b></td>
+            <td><b>Posts</b></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="thread : ${threads}">
+            <td><a th:text="${thread.name}">Thread header</a></td>
+            <td><a th:text="${#lists.size(thread.posts)}">Thread's post count</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:include="fragments :: bootstrap"></div>
+</body>
+</html>

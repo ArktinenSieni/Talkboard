@@ -7,8 +7,8 @@
 <body>
 
 <div th:fragment="errors">
-    <div class="alert alert-danger" th:if="${errors}" th:each="error : ${errors}">
-        <ul>
+    <div class="alert alert-danger" th:if="${errors}">
+        <ul th:each="error : ${errors}">
             <li th:text="${error}"></li>
         </ul>
     </div>
@@ -29,7 +29,21 @@
             </td>
         </tr>
         <tr>
-            <td><input type="submit" value="Submit post"/></td>
+            <td><input class="btn btn-success" type="submit" value="Submit post"/></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container-fluid" th:fragment="threadEdit(thread)">
+    <table>
+        <tbody>
+        <tr>
+            <td><b>Thread name: </b></td>
+            <td><input type="text" name="name" th:value="${thread?.name}"/></td>
+        </tr>
+        <tr>
+            <td><input class="btn btn-success" type="submit" value="Submit thread"/></td>
         </tr>
         </tbody>
     </table>

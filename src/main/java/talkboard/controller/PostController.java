@@ -11,6 +11,8 @@ import talkboard.domain.Post;
 import talkboard.library.FileLocation;
 import talkboard.library.Link;
 import talkboard.repository.PostRepository;
+import talkboard.service.ToolService;
+
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +26,9 @@ public class PostController {
 
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    ToolService toolService;
 
     @RequestMapping(method = RequestMethod.GET)
     public String listPosts(Model model) {
@@ -39,7 +44,7 @@ public class PostController {
     @RequestMapping(method = RequestMethod.POST)
     public String createPost(@Valid @ModelAttribute Post newPost, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("errors", collectErrors(bindingResult));
+            redirectAttributes.addFlashAttribute("errors", toolService.collectErrors(bindingResult));
             redirectAttributes.addFlashAttribute("newPost", newPost);
             return Link.REDIRECT_POSTFORM.toString();
         }
@@ -61,7 +66,7 @@ public class PostController {
     public String editPost(@PathVariable Long id, @Valid @ModelAttribute Post editedPost, RedirectAttributes redirectAttributes, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("id", id);
-            redirectAttributes.addFlashAttribute("errors", collectErrors(bindingResult));
+            redirectAttributes.addFlashAttribute("errors", toolService.collectErrors(bindingResult));
             redirectAttributes.addFlashAttribute("newPost", editedPost);
             return Link.REDIRECT_POSTEDIT.toString();
         }
@@ -78,12 +83,5 @@ public class PostController {
     public String deletePost(@PathVariable Long id) {
         postRepository.delete(id);
         return Link.REDIRECT_POSTS.toString();
-    }
-
-    private List<String> collectErrors (BindingResult bindingResult) {
-        List<String> errors = bindingResult.getAllErrors().stream()
-                .map(e -> e.getDefaultMessage())
-                .collect(Collectors.toList());
-        return errors;
     }
 }
