@@ -8,10 +8,12 @@ public enum Link {
 
     POSTS ("/posts"),
     REDIRECT_POSTS ("redirect:" + Link.POSTS),
-    REDIRECT_POSTFORM ("redirect:" + Link.POSTS + "/createPost"),
+    REDIRECT_POSTFORM ("redirect:/thread/{threadId}/createPost"),
     REDIRECT_POSTEDIT ("redirect:" + Link.POSTS + "/{id}"),
     REDIRECT_THREADS ("redirect:/thread"),
-    REDIRECT_NEWTHREAD ("redirect:/thread/new");
+    REDIRECT_NEWTHREAD ("redirect:/thread/new"),
+    REDIRECT_EDITTHREAD ("redirect:/thread/{id}/edit"),
+    REDIRECT_THREAD ("redirect:/thread/{threadId}");
 
     private final String link;
 

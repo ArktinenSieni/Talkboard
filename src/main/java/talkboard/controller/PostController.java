@@ -8,20 +8,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import talkboard.domain.Post;
+import talkboard.domain.PostThread;
 import talkboard.library.FileLocation;
 import talkboard.library.Link;
 import talkboard.repository.PostRepository;
+import talkboard.repository.ThreadRepository;
 import talkboard.service.ToolService;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by mcsieni on 15.1.2016.
  */
 @Controller
-@RequestMapping(value = "/posts")
 public class PostController {
 
     @Autowired
@@ -30,58 +29,85 @@ public class PostController {
     @Autowired
     ToolService toolService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @Autowired
+    ThreadRepository threadRepository;
+
+    @RequestMapping(value = "/posts", method = RequestMethod.GET)
     public String listPosts(Model model) {
         model.addAttribute("posts", postRepository.findAll());
         return FileLocation.POSTS.toString();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/createPost")
-    public String creationForm() {
+    @RequestMapping(method = RequestMethod.GET, value = "thread/{threadId}/createPost")
+    public String creationForm(Model model, @PathVariable Long threadId) {
+        model.addAttribute("thread", threadRepository.findOne(threadId));
         return FileLocation.POSTFORM.toString();
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public String createPost(@Valid @ModelAttribute Post newPost, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    @Transactional
+    @RequestMapping(method = RequestMethod.POST, value = "/thread/{threadId}")
+    public String createPost(@Valid @ModelAttribute Post newPost,
+                             BindingResult bindingResult,
+                             RedirectAttributes redirectAttributes,
+                             @PathVariable Long threadId) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("errors", toolService.collectErrors(bindingResult));
             redirectAttributes.addFlashAttribute("newPost", newPost);
+            redirectAttributes.addFlashAttribute("threadId", threadId);
             return Link.REDIRECT_POSTFORM.toString();
         }
 
+        PostThread thread = threadRepository.findOne(threadId);
         newPost.setCreated();
-        postRepository.save(newPost);
+        newPost = postRepository.save(newPost);
+        thread.getPosts().add(newPost);
+        thread.setModified();
 
-        return Link.REDIRECT_POSTS.toString();
+        redirectAttributes.addFlashAttribute("threadId", threadId);
+
+        return Link.REDIRECT_THREAD.toString();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public String editionForm(@PathVariable Long id, Model model) {
-        model.addAttribute("newPost", postRepository.findOne(id));
+    @RequestMapping(value = "/thread/{threadId}/{postId}", method = RequestMethod.GET)
+    public String editionForm(@PathVariable Long postId, @PathVariable Long threadId, Model model) {
+        model.addAttribute("newPost", postRepository.findOne(postId));
+        model.addAttribute("thread", threadRepository.findOne(threadId));
         return FileLocation.POSTEDITFORM.toString();
     }
 
     @Transactional
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public String editPost(@PathVariable Long id, @Valid @ModelAttribute Post editedPost, RedirectAttributes redirectAttributes, BindingResult bindingResult) {
+    @RequestMapping(value = "/thread/{threadId}/{postId}", method = RequestMethod.POST)
+    public String editPost(@PathVariable Long postId,
+                           @Valid @ModelAttribute Post editedPost,
+                           RedirectAttributes redirectAttributes,
+                           BindingResult bindingResult,
+                           @PathVariable Long threadId) {
+        redirectAttributes.addFlashAttribute("threadId", threadId);
+
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("id", id);
+            redirectAttributes.addFlashAttribute("postId", postId);
             redirectAttributes.addFlashAttribute("errors", toolService.collectErrors(bindingResult));
             redirectAttributes.addFlashAttribute("newPost", editedPost);
             return Link.REDIRECT_POSTEDIT.toString();
         }
 
-        Post toBeEdited = postRepository.findOne(id);
+        Post toBeEdited = postRepository.findOne(postId);
         toBeEdited.setName(editedPost.getName());
         toBeEdited.setText(editedPost.getText());
         toBeEdited.setModified();
 
-        return Link.REDIRECT_POSTS.toString();
+        return Link.REDIRECT_THREAD.toString();
     }
 
-    @RequestMapping(value = "/{id}/delete", method = RequestMethod.POST)
-    public String deletePost(@PathVariable Long id) {
-        postRepository.delete(id);
-        return Link.REDIRECT_POSTS.toString();
+    @Transactional
+    @RequestMapping(value = {"/{threadId}/{postId}/delete"} , method = RequestMethod.POST)
+    public String deletePost(@PathVariable Long postId, RedirectAttributes redirectAttributes, @PathVariable Long threadId) {
+        Post post = postRepository.findOne(postId);
+        PostThread thread = threadRepository.findOne(threadId);
+        thread.getPosts().remove(post);
+        postRepository.delete(post);
+
+        redirectAttributes.addFlashAttribute("threadId", threadId);
+        return Link.REDIRECT_THREAD.toString();
     }
 }

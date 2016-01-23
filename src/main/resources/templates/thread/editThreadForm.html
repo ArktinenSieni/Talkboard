@@ -8,8 +8,8 @@
 <div th:include="fragments :: navBar"></div>
 <div th:include="fragments :: errors"></div>
 
-<form method="POST" th:action="@{/thread/{threadId} (threadId = ${thread.id})}">
-    <div th:include="fragments :: postEdit (${newPost})"></div>
+<form method="POST" th:action="@{/thread/{id}/edit (id = ${thread.id})}">
+    <div th:include="fragments :: threadEdit (${thread})"></div>
 </form>
 
 <div th:include="fragments :: bootstrap"></div>

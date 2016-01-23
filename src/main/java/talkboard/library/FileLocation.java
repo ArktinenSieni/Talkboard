@@ -9,7 +9,9 @@ public enum FileLocation {
     POSTEDITFORM ("post/postEditForm"),
     POSTS ("post/posts"),
     THREADS ("thread/threads"),
-    THREADFORM ("thread/newThreadForm");
+    THREAD ("thread/thread"),
+    THREAD_FORM ("thread/newThreadForm"),
+    THREAD_EDIT ("thread/editThreadForm");
 
 
     private final String location;

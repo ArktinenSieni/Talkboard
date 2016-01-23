@@ -18,12 +18,14 @@
         <tr>
             <td><b>Thread header</b></td>
             <td><b>Posts</b></td>
+            <td><b>Modified</b></td>
         </tr>
         </thead>
         <tbody>
         <tr th:each="thread : ${threads}">
-            <td><a th:text="${thread.name}">Thread header</a></td>
+            <td><a th:href="@{/thread/{id} (id = ${thread.id})}" th:text="${thread.name}">Thread header</a></td>
             <td><a th:text="${#lists.size(thread.posts)}">Thread's post count</a></td>
+            <td><a th:text="${thread.modified}">Modification date</a></td>
         </tr>
         </tbody>
     </table>

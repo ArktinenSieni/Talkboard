@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Posts</title>
+</head>
+<body>
+<div th:include="fragments :: navBar"></div>
+<div th:include="fragments :: errors"></div>
+
+<form method="GET" th:action="@{/thread/{id}/createPost (id = ${thread.id})}">
+    <input type="submit" class="btn btn-xs btn-default" value="Create post"/>
+</form>
+
+<div class="container-fluid">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td><b th:text="${thread.name}">Thread name</b></td>
+        </tr>
+        </thead>
+        <tbody>
+        <table th:each="post : ${thread.posts}" class="table">
+
+            <thead>
+            <tr>
+                <th th:text="${post.name}"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><p th:text="${post.text}">Post text</p></td>
+            </tr>
+            <tr>
+                <td>
+                    <form method="GET" th:action="@{/thread/{threadId}/{id} (id = ${post.id}, threadId = ${thread.id})}">
+                        <input class="btn btn-xs btn-primary" type="submit" value="Edit post"/>
+                    </form>
+                </td>
+                <td>
+                    <form method="POST" th:action="@{/{threadId}/{postId}/delete (postId = ${post.id}, threadId = ${thread.id})}">
+                        <input class="btn btn-xs btn-danger" onclick="confirm('Are you sure?')" type="submit" value="Delete post"/>
+                    </form>
+                </td>
+                <td><a th:if="${post.modified}" th:text="'Modified: ' + ${post.modified}">Post edition time</a></td>
+                <td><a th:text="'Created: ' + ${post.created}">Post creation time</a></td>
+            </tr>
+            </tbody>
+        </table>
+        </tbody>
+    </table>
+</div>
+
+<form method="GET" th:action="@{/thread/{id}/edit (id = ${thread.id})}">
+    <input type="submit" class="btn btn-xs btn-default" value="Edit thread"/>
+</form>
+<form method="POST" th:action="@{/thread/{id}/delete (id = ${thread.id})}">
+    <input onclick="confirm('Are you sure?')" type="submit" class="btn btn-xs btn-danger" value="Delete thread"/>
+</form>
+
+<div th:include="fragments :: bootstrap"></div>
+</body>
+</html>

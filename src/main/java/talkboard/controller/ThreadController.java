@@ -2,6 +2,7 @@ package talkboard.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,7 +14,7 @@ import talkboard.library.FileLocation;
 import talkboard.library.Link;
 import talkboard.repository.PostRepository;
 import talkboard.repository.ThreadRepository;
-import talkboard.domain.Thread;
+import talkboard.domain.PostThread;
 import talkboard.service.ToolService;
 
 import javax.validation.Valid;
@@ -37,30 +38,60 @@ public class ThreadController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String listThreads(Model model) {
-        model.addAttribute("threads", threadRepository.findAll());
+        model.addAttribute("threads", threadRepository.findAllByOrderByModifiedDesc());
         return FileLocation.THREADS.toString();
+    }
+
+    @RequestMapping(value = "/{id}",method = RequestMethod.GET)
+    public String viewThread(Model model, @PathVariable Long id) {
+        model.addAttribute("thread", threadRepository.findOne(id));
+        return FileLocation.THREAD.toString();
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String createThreadForm() {
-        return FileLocation.THREADFORM.toString();
+        return FileLocation.THREAD_FORM.toString();
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String createThread(@Valid @ModelAttribute Thread newThread, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String createThread(@Valid @ModelAttribute PostThread newThread, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("errors", toolService.collectErrors(bindingResult));
             redirectAttributes.addFlashAttribute("thread", newThread);
             return Link.REDIRECT_NEWTHREAD.toString();
         }
         newThread.setPosts(new ArrayList<>());
+        newThread.setModified();
         threadRepository.save(newThread);
         return Link.REDIRECT_THREADS.toString();
     }
 
-    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
     public String editThreadForm(Model model, @PathVariable Long id) {
         model.addAttribute("thread", threadRepository.findOne(id));
-        return "";
+        return FileLocation.THREAD_EDIT.toString();
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{id}/edit", method = RequestMethod.POST)
+    public String editThread(@Valid @ModelAttribute PostThread editedThread, BindingResult bindingResult, RedirectAttributes redirectAttributes, @PathVariable Long id) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("errors", toolService.collectErrors(bindingResult));
+            redirectAttributes.addFlashAttribute("thread", editedThread);
+            redirectAttributes.addFlashAttribute("id", id);
+
+            return Link.REDIRECT_EDITTHREAD.toString();
+        }
+
+        PostThread threadToEdit = threadRepository.findOne(id);
+        threadToEdit.setName(editedThread.getName());
+
+        return Link.REDIRECT_THREADS.toString();
+    }
+
+    @RequestMapping(value = "/{id}/delete", method = RequestMethod.POST)
+    public String deleteThread(@PathVariable Long id) {
+        threadRepository.delete(id);
+        return Link.REDIRECT_THREADS.toString();
     }
 }
